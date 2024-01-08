@@ -1,4 +1,4 @@
-import BlogComment from "../models/blogComment";
+import BlogComment from "../models/blogComment.js";
 import mongoose from "mongoose";
 
 const addBlogComment = async (req, res) => {
@@ -25,12 +25,10 @@ const getBlogComments = async (req, res) => {
     const blogComments = await BlogComment.find({
       blogId: mongoose.Types.ObjectId(blogId),
     });
-    return res
-      .status(201)
-      .send({
-        message: "Blog comments fetched successfully",
-        data: blogComments,
-      });
+    return res.status(201).send({
+      message: "Blog comments fetched successfully",
+      data: blogComments,
+    });
   } catch (error) {
     return res
       .status(400)
@@ -54,12 +52,10 @@ const updateBlogComment = async (req, res) => {
       { $set: updatedBlogComment },
       { new: true }
     );
-    return res
-      .status(201)
-      .send({
-        message: "Blog comment updated successfully",
-        data: blogComment,
-      });
+    return res.status(201).send({
+      message: "Blog comment updated successfully",
+      data: blogComment,
+    });
   } catch (error) {
     return res
       .status(401)

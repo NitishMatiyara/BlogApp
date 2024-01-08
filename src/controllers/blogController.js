@@ -50,6 +50,7 @@ const updateBlog = async (req, res) => {
     const updatedBlog = { title, description };
     const { _id: userId } = req.user;
     const id = req.params;
+
     const blog = await Blog.findOneAndUpdate(
       {
         _id: new mongoose.Types.ObjectId(id),
@@ -67,10 +68,11 @@ const updateBlog = async (req, res) => {
       .send({ message: "Failed to fetch blogs", error: error });
   }
 };
-const deleteBlog = async () => {
+const deleteBlog = async (req, res) => {
   try {
     const { _id: userId } = req.user;
     const id = req.params;
+
     const blog = await Blog.findOneAndDelete({
       _id: new mongoose.Types.ObjectId(id),
       userId: new mongoose.Types.ObjectId(userId),
