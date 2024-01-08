@@ -1,9 +1,10 @@
 import Blog from "../models/blog.js";
 
-const createBlog = async () => {
+const createBlog = async (req, res) => {
   try {
     const { title, description } = req.body;
-    const newBlog = new Blog({ title, description });
+     const { _id: userId } = req.user;
+    const newBlog = new Blog({ title, description, userId });
     await newBlog.save();
     return res.status(201).send({ message: "Blog added successfully" });
   } catch (error) {
@@ -12,7 +13,7 @@ const createBlog = async () => {
       .send({ message: "Failed to add blog", error: error });
   }
 };
-const getAllBlogs = async () => {
+const getAllBlogs = async (req, res) => {
   try {
     const { _id: userId } = req.user;
     const blog = await Blog.find({ user: userId });
@@ -25,7 +26,7 @@ const getAllBlogs = async () => {
       .send({ message: "Failed to fetch blogs", error: error });
   }
 };
-const getBlog = async () => {
+const getBlog = async (req, res) => {
   try {
     const id = req.params;
     const blog = await Blog.findById({ _id: id });
@@ -38,7 +39,7 @@ const getBlog = async () => {
       .send({ message: "Failed to fetch blog", error: error });
   }
 };
-const updateBlog = async () => {
+const updateBlog = async (req, res) => {
   try {
     const updatedBlog = { title, description };
     const { _id: userId } = req.user;
@@ -57,7 +58,7 @@ const updateBlog = async () => {
       .send({ message: "Failed to fetch blogs", error: error });
   }
 };
-const deleteBlog = async () => {
+const deleteBlog = async (req, res) => {
   try {
     const { _id: userId } = req.user;
     const id = req.params;
