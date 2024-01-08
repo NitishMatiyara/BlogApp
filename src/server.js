@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import userRouter from "./routes/userRouter.js";
 import blogRouter from "./routes/blogRouter.js";
+import blogCommentRouter from "./routes/blogCommentRouter.js";
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use("/user", userRouter);
 app.use("/blog", blogRouter);
+app.use("/blogComment", blogCommentRouter);
 
 app.get("/", (req, res) => {
   res.send("Api is running");

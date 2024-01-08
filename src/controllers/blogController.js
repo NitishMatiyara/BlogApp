@@ -1,21 +1,26 @@
 import Blog from "../models/blog.js";
+import mongoose from "mongoose";
 
-const createBlog = async () => {
+const createBlog = async (req, res) => {
   try {
     const { title, description } = req.body;
-    const newBlog = new Blog({ title, description });
+    const { _id: userId } = req.user;
+    const newBlog = new Blog({ title, description, userId });
     await newBlog.save();
     return res.status(201).send({ message: "Blog added successfully" });
   } catch (error) {
+    console.log(error);
     return res
       .status(401)
       .send({ message: "Failed to add blog", error: error });
   }
 };
-const getAllBlogs = async () => {
+const getAllBlogs = async (req, res) => {
   try {
     const { _id: userId } = req.user;
-    const blog = await Blog.find({ user: userId });
+    const blog = await Blog.find({
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     return res
       .status(201)
       .send({ message: "Blogs fetched successfully", data: blog });
@@ -25,26 +30,31 @@ const getAllBlogs = async () => {
       .send({ message: "Failed to fetch blogs", error: error });
   }
 };
-const getBlog = async () => {
+const getBlog = async (req, res) => {
   try {
     const id = req.params;
-    const blog = await Blog.findById({ _id: id });
+    const blog = await Blog.findById({ _id: new mongoose.Types.ObjectId(id) });
     return res
       .status(201)
       .send({ message: "Blog fetched successfully", data: blog });
   } catch (error) {
+    console.log(error);
     return res
       .status(401)
       .send({ message: "Failed to fetch blog", error: error });
   }
 };
-const updateBlog = async () => {
+const updateBlog = async (req, res) => {
   try {
+    const { title, description } = req.body;
     const updatedBlog = { title, description };
     const { _id: userId } = req.user;
     const id = req.params;
     const blog = await Blog.findOneAndUpdate(
-      { _id: id, user: userId },
+      {
+        _id: new mongoose.Types.ObjectId(id),
+        userId: new mongoose.Types.ObjectId(userId),
+      },
       { $set: updatedBlog },
       { new: true }
     );
@@ -61,7 +71,10 @@ const deleteBlog = async () => {
   try {
     const { _id: userId } = req.user;
     const id = req.params;
-    const blog = await Blog.findOneAndDelete({ _id: id, user: userId });
+    const blog = await Blog.findOneAndDelete({
+      _id: new mongoose.Types.ObjectId(id),
+      userId: new mongoose.Types.ObjectId(userId),
+    });
     return res.status(201).send({ message: "Blog deleted successfully" });
   } catch (error) {
     return res

@@ -34,10 +34,11 @@ const login = async (req, res) => {
   try {
     const { email, password } = req?.body;
     const userData = await User.findOne({ email });
+
     if (userData === null)
       return res.status(400).send({ message: "invalid email or password" });
 
-    const token = jwt.sign(userData, process.env.JWT_SECRET_KEY);
+    const token = jwt.sign(userData.toJSON(), process.env.JWT_SECRET_KEY);
 
     bcrypt.compare(password, userData.password, function (err, result) {
       if (err) throw err;
