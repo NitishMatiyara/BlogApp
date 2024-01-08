@@ -1,4 +1,5 @@
 import Blog from "../models/blog.js";
+import mongoose from "mongoose";
 
 const createBlog = async (req, res) => {
   try {
@@ -29,7 +30,7 @@ const getAllBlogs = async (req, res) => {
 const getBlog = async (req, res) => {
   try {
     const id = req.params;
-    const blog = await Blog.findById({ _id: id });
+    const blog = await Blog.findById({ _id: new mongoose.Types.ObjectId(id) });
     return res
       .status(201)
       .send({ message: "Blog fetched successfully", data: blog });
@@ -45,7 +46,7 @@ const updateBlog = async (req, res) => {
     const { _id: userId } = req.user;
     const id = req.params;
     const blog = await Blog.findOneAndUpdate(
-      { _id: id, user: userId },
+      { _id: new mongoose.Types.ObjectId(id), user: userId },
       { $set: updatedBlog },
       { new: true }
     );
@@ -62,7 +63,7 @@ const deleteBlog = async (req, res) => {
   try {
     const { _id: userId } = req.user;
     const id = req.params;
-    const blog = await Blog.findOneAndDelete({ _id: id, user: userId });
+    const blog = await Blog.findOneAndDelete({ _id: new mongoose.Types.ObjectId(id), user: userId });
     return res.status(201).send({ message: "Blog deleted successfully" });
   } catch (error) {
     return res
