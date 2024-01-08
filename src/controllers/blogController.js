@@ -17,6 +17,18 @@ const createBlog = async (req, res) => {
 };
 const getAllBlogs = async (req, res) => {
   try {
+    const blogs = await Blog.find();
+    return res
+      .status(201)
+      .send({ message: "Blogs fetched successfully", data: blogs });
+  } catch (error) {
+    return res
+      .status(401)
+      .send({ message: "Failed to fetch blogs", error: error });
+  }
+};
+const getUserBlogs = async (req, res) => {
+  try {
     const { _id: userId } = req.user;
     const blog = await Blog.find({
       userId: new mongoose.Types.ObjectId(userId),
@@ -85,4 +97,11 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-export default { createBlog, deleteBlog, getBlog, updateBlog, getAllBlogs };
+export default {
+  createBlog,
+  deleteBlog,
+  getBlog,
+  updateBlog,
+  getAllBlogs,
+  getUserBlogs,
+};
