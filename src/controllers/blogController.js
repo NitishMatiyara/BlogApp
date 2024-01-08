@@ -16,7 +16,7 @@ const createBlog = async (req, res) => {
 const getAllBlogs = async (req, res) => {
   try {
     const { _id: userId } = req.user;
-    const blog = await Blog.find({ user: userId });
+    const blog = await Blog.find({ userId: userId });
     return res
       .status(201)
       .send({ message: "Blogs fetched successfully", data: blog });
